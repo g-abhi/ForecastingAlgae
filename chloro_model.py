@@ -127,6 +127,7 @@ if __name__ == "__main__":
     }
 
     model = UNet(in_channels = 10, out_channels = 20)
+    # model = CustomViTAutoEnc(in_channels=10, img_size=128, patch_size=32, out_channels=20)
     
     net = Net(config, model)
     
