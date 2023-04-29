@@ -10,12 +10,8 @@ Experiment tracking is performed in TensorBoard.
 AUTHOR: ANIKET PANT, GT MSE, 04/25/2023
 '''
 
-import os
 import torch
-import numpy as np
-from torch.nn import functional as F
 from torch import nn
-from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 
 import pytorch_lightning
@@ -26,13 +22,13 @@ from datasets import ChloroDataset
 from models import UNet
 
 class Net(LightningModule):
-    def __init__(self, config):
+    def __init__(self, config, model):
         super().__init__()
         
         self.config = config
         
         # instantiate model
-        self._model = UNet(in_channels = 10, out_channels = 30)
+        self._model = model
         
         self.train_loss_function = nn.MSELoss()
         self.val_loss_function = nn.MSELoss()
@@ -45,29 +41,33 @@ class Net(LightningModule):
         return self._model(x)
     
     def prepare_data(self):
-        # set up the correct data path
-        files_directory = "./data/requested_files/"
         
         
         # instantiate training
         self.train_ds = ChloroDataset(
-            files_directory = files_directory, 
+            files_directory = 'data/train_data/', 
             timesteps_in = 10,
-            timesteps_out = 30
+            timesteps_out = 20
         )
         
         # validation datasets
         self.val_ds = ChloroDataset(
-            files_directory = files_directory,
+            files_directory = 'data/validation_data/',
             timesteps_in = 10,
-            timesteps_out = 30
+            timesteps_out = 20
+        )
+
+        self.test_ds = ChloroDataset(
+            files_directory = 'data/test_data/',
+            timesteps_in = 10,
+            timesteps_out = 20
         )
         
     def train_dataloader(self):
         train_loader = DataLoader(
             self.train_ds,
             batch_size=self.config['batch_size'],
-            shuffle=True,
+            # shuffle=True,
             num_workers=4,
         )
         return train_loader
@@ -77,7 +77,7 @@ class Net(LightningModule):
         return val_loader
     
     def test_dataloader(self):
-        test_loader = DataLoader(self.val_ds, batch_size=self.config['batch_size'], num_workers=4)
+        test_loader = DataLoader(self.test_ds, batch_size=self.config['batch_size'], num_workers=4)
         return test_loader
     
     def configure_optimizers(self):
@@ -125,8 +125,10 @@ if __name__ == "__main__":
     config = {
         "batch_size": 8
     }
+
+    model = UNet(in_channels = 10, out_channels = 20)
     
-    net = Net(config)
+    net = Net(config, model)
     
     
     # set up loggers and checkpoints
