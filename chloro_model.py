@@ -132,10 +132,8 @@ if __name__ == "__main__":
     model = CustomViTAutoEnc(
                               in_channels=10, 
                               patch_size=(16,16), 
-                              img_size=(128,146), 
-                              out_channels = 20, 
-                              pos_embed='conv', 
-                              spatial_dims = 2
+                              img_size=(146,128), 
+                              out_channels = 20
                             )
     
     net = Net(config, model)

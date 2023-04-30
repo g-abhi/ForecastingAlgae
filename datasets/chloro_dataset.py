@@ -69,7 +69,9 @@ class ChloroDataset(Dataset):
             time_out_data.append(prep_data)
 
         time_in_tensor = torch.tensor(np.array(time_in_data), dtype=torch.float32)
+        print("time in tensor shape", time_in_tensor.shape)
         time_out_tensor = torch.tensor(np.array(time_out_data), dtype=torch.float32)
+        print("time out tensor shape", time_out_tensor.shape)
 
         return {
             "t_gt": time_in_tensor,
