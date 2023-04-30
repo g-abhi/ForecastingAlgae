@@ -45,20 +45,20 @@ class Net(LightningModule):
         
         # instantiate training
         self.train_ds = ChloroDataset(
-            files_directory = 'ForecastingAlgae/data/train_data/', 
+            files_directory = 'ForecastingAlgae/data/trainnc_data/', 
             timesteps_in = 10,
             timesteps_out = 20
         )
         
         # validation datasets
         self.val_ds = ChloroDataset(
-            files_directory = 'ForecastingAlgae/data/validation_data/',
+            files_directory = 'ForecastingAlgae/data/validationnc_data/',
             timesteps_in = 10,
             timesteps_out = 20
         )
 
         self.test_ds = ChloroDataset(
-            files_directory = 'ForecastingAlgae/data/test_data/',
+            files_directory = 'ForecastingAlgae/data/testnc_data/',
             timesteps_in = 10,
             timesteps_out = 20
         )
