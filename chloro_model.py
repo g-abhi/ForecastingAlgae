@@ -6,8 +6,6 @@ Chlorophyll concentration from gathered NASA dataset.
 Of note are files in datasets/ and models/.
 
 Experiment tracking is performed in TensorBoard.
-
-AUTHOR: ANIKET PANT, GT MSE, 04/25/2023
 '''
 
 import torch
@@ -19,7 +17,8 @@ from pytorch_lightning.core.lightning import LightningModule
 
 # Custom imports
 from datasets import ChloroDataset
-from models import UNet, CustomViTAutoEnc
+from models import UNet, CustomViTAutoEnc, CustomUNet, CustomAttentionUNet
+# from monai.networks.nets import UNet, ViTAutoEnc, AttentionNet
 
 class Net(LightningModule):
     def __init__(self, config, model):
@@ -129,12 +128,29 @@ if __name__ == "__main__":
     }
 
     # model = UNet(in_channels = 10, out_channels = 20)
-    model = CustomViTAutoEnc(
-                              in_channels=10, 
-                              patch_size=(16,16), 
-                              img_size=(146,128), 
-                              out_channels = 20
-                            )
+
+    # model = CustomViTAutoEnc(
+    #                           in_channels=10, 
+    #                           patch_size=(16,16), 
+    #                           img_size=(128,128), 
+    #                           out_channels = 20
+    #                         )
+
+    # model = CustomUNet(
+    #                     spatial_dims=2, 
+    #                     in_channels=10, 
+    #                     out_channels=20, 
+    #                     channels=1, 
+    #                     strides=1
+    #                 )
+
+    model = CustomAttentionUNet(
+                        spatial_dims=2, 
+                        in_channels=10, 
+                        out_channels=20, 
+                        channels=1, 
+                        strides=1
+                    )
     
     net = Net(config, model)
     

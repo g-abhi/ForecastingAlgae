@@ -1,8 +1,6 @@
 '''
 This dataloader accepts a path for NC files, timesteps_in (Int) and timesteps_out (Int).
 It returns three objects, two tensors with time data and one with time information for selected indexes.
-
-AUTHOR: ANIKET PANT, GT MSE, 04/25/2023
 '''
 
 import os
@@ -69,9 +67,9 @@ class ChloroDataset(Dataset):
             time_out_data.append(prep_data)
 
         time_in_tensor = torch.tensor(np.array(time_in_data), dtype=torch.float32)
-        print("time in tensor shape", time_in_tensor.shape)
+        time_in_tensor = time_in_tensor[:, time_in_tensor.shape[1]-time_in_tensor.shape[2]:, :]
         time_out_tensor = torch.tensor(np.array(time_out_data), dtype=torch.float32)
-        print("time out tensor shape", time_out_tensor.shape)
+        time_out_tensor = time_out_tensor[:, time_out_tensor.shape[1]-time_out_tensor.shape[2]:, :]
 
         return {
             "t_gt": time_in_tensor,

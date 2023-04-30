@@ -1,8 +1,6 @@
 '''
 3D time-dependent DL model (Conv3D backbone, UNET baseline) for forward-forecasting.
 Expects 5D input of the form: torch.Size([1, timestep_in, Channels (1), X, Y]) 
-
-AUTHOR: ANIKET PANT, GT MSE, 04/25/2023
 '''
 
 import torch
