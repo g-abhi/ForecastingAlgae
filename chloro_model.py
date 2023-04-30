@@ -19,7 +19,7 @@ from pytorch_lightning.core.lightning import LightningModule
 
 # Custom imports
 from datasets import ChloroDataset
-from models import UNet
+from models import UNet, CustomViTAutoEnc
 
 class Net(LightningModule):
     def __init__(self, config, model):
@@ -45,20 +45,20 @@ class Net(LightningModule):
         
         # instantiate training
         self.train_ds = ChloroDataset(
-            files_directory = 'data/train_data/', 
+            files_directory = 'ForecastingAlgae/data/train_data/', 
             timesteps_in = 10,
             timesteps_out = 20
         )
         
         # validation datasets
         self.val_ds = ChloroDataset(
-            files_directory = 'data/validation_data/',
+            files_directory = 'ForecastingAlgae/data/validation_data/',
             timesteps_in = 10,
             timesteps_out = 20
         )
 
         self.test_ds = ChloroDataset(
-            files_directory = 'data/test_data/',
+            files_directory = 'ForecastingAlgae/data/test_data/',
             timesteps_in = 10,
             timesteps_out = 20
         )
