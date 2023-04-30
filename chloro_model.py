@@ -46,21 +46,21 @@ class Net(LightningModule):
         # instantiate training
         self.train_ds = ChloroDataset(
             files_directory = 'ForecastingAlgae/data/trainnc_data/', 
-            timesteps_in = 10,
-            timesteps_out = 20
+            timesteps_in = self.config['time_in'],
+            timesteps_out = self.config['time_out']
         )
         
         # validation datasets
         self.val_ds = ChloroDataset(
             files_directory = 'ForecastingAlgae/data/validationnc_data/',
-            timesteps_in = 10,
-            timesteps_out = 20
+            timesteps_in = self.config['time_in'],
+            timesteps_out = self.config['time_out']
         )
 
         self.test_ds = ChloroDataset(
             files_directory = 'ForecastingAlgae/data/testnc_data/',
-            timesteps_in = 10,
-            timesteps_out = 20
+            timesteps_in = self.config['time_in'],
+            timesteps_out = self.config['time_out']
         )
         
     def train_dataloader(self):
@@ -123,11 +123,20 @@ if __name__ == "__main__":
     # initialise the LightningModule
     
     config = {
-        "batch_size": 8
+        "batch_size": 8,
+        "time_in": 10,
+        "time_out": 20
     }
 
-    model = UNet(in_channels = 10, out_channels = 20)
-    # model = CustomViTAutoEnc(in_channels=10, img_size=128, patch_size=32, out_channels=20)
+    # model = UNet(in_channels = 10, out_channels = 20)
+    model = CustomViTAutoEnc(
+                              in_channels=10, 
+                              patch_size=(16,16), 
+                              img_size=(128,146), 
+                              out_channels = 20, 
+                              pos_embed='conv', 
+                              spatial_dims = 2
+                            )
     
     net = Net(config, model)
     

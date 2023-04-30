@@ -1,7 +1,8 @@
 from monai.networks.nets import ViTAutoEnc
+import torch
+import torch.nn as nn
 
-
-class CustomViTAutoEnc():
+class CustomViTAutoEnc(nn.Module):
     def __init__(self, in_channels, img_size, patch_size, out_channels):
         super(CustomViTAutoEnc, self).__init__()
         self.in_channels = in_channels # 10
