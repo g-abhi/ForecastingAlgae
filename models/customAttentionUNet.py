@@ -1,4 +1,4 @@
-from monai.networks.nets import AttentionUNet
+from monai.networks.nets import AttentionUnet
 import torch
 import torch.nn as nn
 
