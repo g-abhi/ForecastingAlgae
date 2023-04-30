@@ -13,7 +13,7 @@ class CustomAttentionUNet(nn.Module):
         self.kernel_size = kernel_size
         self.up_kernel_size = up_kernel_size
         self.dropout = dropout
-        self.attn_unet = AttentionUNet(
+        self.attn_unet = AttentionUnet(
             spatial_dims = self.spatial_dims,
             in_channels = self.in_channels,
             out_channels = self.out_channels,
