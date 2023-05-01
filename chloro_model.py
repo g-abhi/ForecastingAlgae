@@ -98,6 +98,8 @@ class Net(LightningModule):
         pred = self.forward(t_in)
         loss = self.train_loss_function(pred, t_out)
         tensorboard_logs = {"train_loss": loss.item()}
+        print(type(loss))
+        self.log("train_loss", loss, prog_bar=True, sync_dist=True)
         return {"loss": loss, "log": tensorboard_logs}
     
     def validation_step(self, batch, batch_idx):
@@ -105,6 +107,7 @@ class Net(LightningModule):
         pred = self.forward(t_in)
         loss = self.val_loss_function(pred, t_out)
         tensorboard_logs = {"val_loss": loss.item()}
+        self.log("val_loss", loss, prog_bar=True, sync_dist=True)
 
         print(
             f"val_loss: {loss} "
@@ -120,7 +123,7 @@ class Net(LightningModule):
             num_items += output["val_number"]
         mean_val_loss = torch.tensor(val_loss / num_items)
         tensorboard_logs = {
-            "val_loss": mean_val_loss,
+            "mean_val_loss": mean_val_loss,
         }
         if mean_val_loss < self.best_val_loss:
             self.best_val_loss = mean_val_loss
@@ -131,6 +134,8 @@ class Net(LightningModule):
             f"\nbest mean loss: {self.best_val_loss:.4f} "
             f"at epoch: {self.best_val_epoch}"
         )
+        self.log("mean_val_loss", mean_val_loss, prog_bar=True, sync_dist=True)
+        self.log("best_val_loss", self.best_val_loss, prog_bar=True, sync_dist=True)
         return {"log": tensorboard_logs}
     
     
@@ -173,8 +178,8 @@ if __name__ == "__main__":
     
     
     # set up loggers and checkpoints
-    # tb_logger = pytorch_lightning.loggers.TensorBoardLogger(save_dir="./logs")
-    tb_logger = pytorch_lightning.loggers.CSVLogger(save_dir="./logs")
+    tb_logger = pytorch_lightning.loggers.TensorBoardLogger(save_dir="./logs")
+    # tb_logger = pytorch_lightning.loggers.CSVLogger(save_dir="./logs")
 
     
     # initialise Lightning's trainer.
