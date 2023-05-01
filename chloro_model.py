@@ -80,8 +80,18 @@ class Net(LightningModule):
         return test_loader
     
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self._model.parameters(), 1e-4)
-        return optimizer
+        # optimizer = torch.optim.Adam(self._model.parameters(), 1e-4)
+        # return optimizer
+        optimizer = torch.optim.Adam(self._model.parameters(), self.config['lr'])
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=3, verbose=True),
+                "monitor": "train_loss",
+                "frequency": 2
+            }
+        }
+
     
     def training_step(self, batch, batch_idx):
         t_in, t_out, t_info = batch["t_gt"], batch["t_forecast"], batch["t_info"]
@@ -124,7 +134,8 @@ if __name__ == "__main__":
     config = {
         "batch_size": 64,
         "time_in": 10,
-        "time_out": 20
+        "time_out": 20,
+        "lr": 1e-4
     }
 
     # model = UNet(in_channels = 10, out_channels = 20)
