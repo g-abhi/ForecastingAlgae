@@ -87,7 +87,7 @@ class Net(LightningModule):
         #     "optimizer": optimizer,
         #     "lr_scheduler": {
         #         "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=3, verbose=True),
-        #         "monitor": "loss",
+        #         "monitor": "train_loss",
         #         "frequency": 2
         #     }
         # }
@@ -167,13 +167,15 @@ if __name__ == "__main__":
     
     
     # set up loggers and checkpoints
-    tb_logger = pytorch_lightning.loggers.TensorBoardLogger(save_dir="./logs")
+    # tb_logger = pytorch_lightning.loggers.TensorBoardLogger(save_dir="./logs")
+    tb_logger = pytorch_lightning.loggers.CSVLogger(save_dir="./logs")
+
     
     # initialise Lightning's trainer.
     trainer = pytorch_lightning.Trainer(
         gpus=[0],
-        min_epochs=50,
-        max_epochs=100,
+        min_epochs=1,
+        max_epochs=4,
         logger=tb_logger,
         enable_checkpointing=True,
         num_sanity_val_steps=1,
