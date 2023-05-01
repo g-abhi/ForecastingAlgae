@@ -105,6 +105,12 @@ class Net(LightningModule):
         pred = self.forward(t_in)
         loss = self.val_loss_function(pred, t_out)
         tensorboard_logs = {"val_loss": loss.item()}
+
+        print(
+            f"val_loss: {loss} "
+            f"val_number: {len(pred)}"
+        )
+
         return {"val_loss": loss, "val_number": len(pred)}
     
     def validation_epoch_end(self, outputs):
