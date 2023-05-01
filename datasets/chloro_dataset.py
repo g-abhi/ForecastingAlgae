@@ -23,7 +23,7 @@ def open_aqua_modis_file(file_path):
     
 def prep_data_plot(dataset):
     chlor_a = dataset.variables['chlor_a']
-    fill_value = chlor_a._FillValue
+    fill_value = 0 # chlor_a._FillValue
     valid_min = chlor_a.valid_min
     valid_max = chlor_a.valid_max
 
