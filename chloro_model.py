@@ -122,7 +122,7 @@ if __name__ == "__main__":
     # initialise the LightningModule
     
     config = {
-        "batch_size": 8,
+        "batch_size": 64,
         "time_in": 10,
         "time_out": 20
     }
@@ -136,21 +136,21 @@ if __name__ == "__main__":
     #                           out_channels = 20
     #                         )
 
-    # model = CustomUNet(
+    model = CustomUNet(
+                        spatial_dims=2, 
+                        in_channels=10, 
+                        out_channels=20, 
+                        channels=(16,32,64,128,256), 
+                        strides=(2,2,2,2,2)
+                    )
+
+    # model = CustomAttentionUNet(
     #                     spatial_dims=2, 
     #                     in_channels=10, 
     #                     out_channels=20, 
     #                     channels=1, 
     #                     strides=1
     #                 )
-
-    model = CustomAttentionUNet(
-                        spatial_dims=2, 
-                        in_channels=10, 
-                        out_channels=20, 
-                        channels=1, 
-                        strides=1
-                    )
     
     net = Net(config, model)
     
