@@ -80,17 +80,17 @@ class Net(LightningModule):
         return test_loader
     
     def configure_optimizers(self):
-        # optimizer = torch.optim.Adam(self._model.parameters(), 1e-4)
-        # return optimizer
         optimizer = torch.optim.Adam(self._model.parameters(), self.config['lr'])
-        return {
-            "optimizer": optimizer,
-            "lr_scheduler": {
-                "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=3, verbose=True),
-                "monitor": "loss",
-                "frequency": 2
-            }
-        }
+        return optimizer
+        # optimizer = torch.optim.Adam(self._model.parameters(), self.config['lr'])
+        # return {
+        #     "optimizer": optimizer,
+        #     "lr_scheduler": {
+        #         "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=3, verbose=True),
+        #         "monitor": "loss",
+        #         "frequency": 2
+        #     }
+        # }
 
     
     def training_step(self, batch, batch_idx):
