@@ -87,7 +87,7 @@ class Net(LightningModule):
             "optimizer": optimizer,
             "lr_scheduler": {
                 "scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=3, verbose=True),
-                "monitor": "train_loss",
+                "monitor": "loss",
                 "frequency": 2
             }
         }
@@ -98,7 +98,7 @@ class Net(LightningModule):
         pred = self.forward(t_in)
         loss = self.train_loss_function(pred, t_out)
         tensorboard_logs = {"train_loss": loss.item()}
-        return {"train_loss": loss, "log": tensorboard_logs}
+        return {"loss": loss, "log": tensorboard_logs}
     
     def validation_step(self, batch, batch_idx):
         t_in, t_out, t_info = batch["t_gt"], batch["t_forecast"], batch["t_info"]
