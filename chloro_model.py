@@ -98,7 +98,7 @@ class Net(LightningModule):
         pred = self.forward(t_in)
         loss = self.train_loss_function(pred, t_out)
         tensorboard_logs = {"train_loss": loss.item()}
-        return {"loss": loss, "log": tensorboard_logs}
+        return {"train_loss": loss, "log": tensorboard_logs}
     
     def validation_step(self, batch, batch_idx):
         t_in, t_out, t_info = batch["t_gt"], batch["t_forecast"], batch["t_info"]
@@ -178,6 +178,7 @@ if __name__ == "__main__":
         enable_checkpointing=True,
         num_sanity_val_steps=1,
         log_every_n_steps=1,
+        strategy='ddp'
     )
 
     # train
