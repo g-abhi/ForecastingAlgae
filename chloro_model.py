@@ -165,8 +165,8 @@ if __name__ == "__main__":
     #                     spatial_dims=2, 
     #                     in_channels=10, 
     #                     out_channels=20, 
-    #                     channels=1, 
-    #                     strides=1
+    #                     channels=(16,32,64,128,256),  
+    #                     strides=(2,2,2,2,2)
     #                 )
     
     net = Net(config, model)
