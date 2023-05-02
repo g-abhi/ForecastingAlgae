@@ -192,7 +192,7 @@ if __name__ == "__main__":
       #                 )
 
 
-    test_ckpt = True
+    test_ckpt = False
     if test_ckpt:
 
         print("Testing existing checkpoint")
