@@ -19,6 +19,7 @@ from pytorch_lightning.core.lightning import LightningModule
 import json
 import sys
 import pickle
+import numpy as np
 # Custom imports
 from datasets import ChloroDataset
 from models import UNet, CustomViTAutoEnc, CustomUNet, CustomAttentionUNet
@@ -252,9 +253,10 @@ if __name__ == "__main__":
             # test
             trainer.test(net)
             # save
-            writefile = open("./logs/default/pred.pkl", "wb")
-            pickle.dump(net.predictions, writefile)
-            writefile.close()
+            # writefile = open("./logs/default/pred.pkl", "wb")
+            # pickle.dump(net.predictions, writefile)
+            # writefile.close()
+            np.save('./logs/default/preds.npy', np.array(net.predictions, dtype=object), allow_pickle=True)
 
 
 
@@ -278,9 +280,10 @@ if __name__ == "__main__":
             print(f"train completed, best_metric: {net.best_val_loss:.4f} " f"at epoch {net.best_val_epoch}")
             
             trainer.test(net)
-            writefile = open( "./logs/default/pred.pkl", "wb" )
-            pickle.dump( net.predictions, writefile)
-            writefile.close()
+            # writefile = open( "./logs/default/pred.pkl", "wb" )
+            # pickle.dump( net.predictions, writefile)
+            # writefile.close()
+            np.save('./logs/default/preds.npy', np.array(net.predictions, dtype=object), allow_pickle=True)
 
 
 
