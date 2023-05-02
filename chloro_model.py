@@ -105,7 +105,6 @@ class Net(LightningModule):
         pred = self.forward(t_in)
         loss = self.train_loss_function(pred, t_out)
         tensorboard_logs = {"train_loss": loss.item()}
-        print(type(loss))
         self.log("train_loss", loss, prog_bar=True, sync_dist=True)
         return {"loss": loss, "log": tensorboard_logs}
 
@@ -169,20 +168,20 @@ if __name__ == "__main__":
           "lr": 1e-4
       }
 
-      # model = CustomViTAutoEnc(
-      #                           in_channels=10,
-      #                           patch_size=(16,16),
-      #                           img_size=(128,128),
-      #                           out_channels = 20
-      #                         )
+    model = CustomViTAutoEnc(
+                            in_channels=10,
+                            patch_size=(16,16),
+                            img_size=(128,128),
+                            out_channels = 20
+                            )
 
-    model = CustomUNet(
-                        spatial_dims=2,
-                        in_channels=10,
-                        out_channels=20,
-                        channels=(16,32,64,128,256),
-                        strides=(2,2,2,2,2)
-                      )
+    # model = CustomUNet(
+    #                     spatial_dims=2,
+    #                     in_channels=10,
+    #                     out_channels=20,
+    #                     channels=(16,32,64,128,256),
+    #                     strides=(2,2,2,2,2)
+    #                   )
 
       # model = CustomAttentionUNet(
       #                     spatial_dims=2,
@@ -192,62 +191,26 @@ if __name__ == "__main__":
       #                     strides=1
       #                 )
 
-    net = Net(config, model)
 
+    test_ckpt = True
+    if test_ckpt:
 
+        print("Testing existing checkpoint")
 
-    if args.train:
-      
-    #   print("Testing existing checkpoint")
+        pathToPretrainedCheckpoint = "/content/ForecastingAlgae/logs/default/version_0/checkpoints/CustomUNet_Exp01_epoch=3-step=319.ckpt"
+        model = CustomViTAutoEnc.load_from_checkpoint(pathToPretrainedCheckpoint)
+        print()
+        net = Net(config, model)
+    
+        # checkpoint = torch.load(pathToPretrainedCheckpoint)
+        # state_dict = checkpoint['state_dict']
+        # new_state_dict = OrderedDict()
+        # for k, v in state_dict.items():
+        #     name = k[7:] # remove module.
+        #     new_state_dict[name] = v
 
-    #   pathToPretrainedCheckpoint = "/content/ForecastingAlgae/logs/default/version_0/checkpoints/CustomUNet_Exp01_epoch=3-step=319.ckpt"
-    #   model = LightningModule.load_from_checkpoint(pathToPretrainedCheckpoint)
-    #   print()
-      
-    #   checkpoint = torch.load(pathToPretrainedCheckpoint)
-    #   state_dict = checkpoint['state_dict']
-    #   new_state_dict = OrderedDict()
-    #   for k, v in state_dict.items():
-    #       name = k[7:] # remove module.
-    #       new_state_dict[name] = v
+        # model.load_state_dict(new_state_dict)
 
-    #   model.load_state_dict(new_state_dict)
-    #   print("loaded checkpoint")
-    #   test_loader = net.test_dataloader()
-    #   assert test_loader
-    #   print("here")
-    #   trainer.test(model)
-
-        # initialise Lightning's trainer.
-        trainer = pytorch_lightning.Trainer(
-            gpus=[0],
-            min_epochs=1,
-            max_epochs=4,
-            logger=tb_logger,
-            enable_checkpointing=True,
-            num_sanity_val_steps=1,
-            log_every_n_steps=1,
-            strategy='ddp'
-        )
-
-        # train
-        trainer.fit(net)
-        print(f"train completed, best_metric: {net.best_val_loss:.4f} " f"at epoch {net.best_val_epoch}")
-
-        # test
-        trainer.test(net)
-        # save
-        writefile = open("./logs/default/pred.pkl", "wb")
-        pickle.dump(net.predictions, writefile)
-        writefile.close()
-
-
-
-
-
-    else:
-      
-        print("Testing Model with random vals")
         trainer = pytorch_lightning.Trainer(
             gpus=[0],
             min_epochs=1,
@@ -259,13 +222,65 @@ if __name__ == "__main__":
             strategy='ddp'
         )
 
-        net.prepare_data()
-        print(f"train completed, best_metric: {net.best_val_loss:.4f} " f"at epoch {net.best_val_epoch}")
-        
-        trainer.test(net)
-        writefile = open( "./logs/default/pred.pkl", "wb" )
-        pickle.dump( net.predictions, writefile)
-        writefile.close()
+        print("loaded checkpoint")
+        test_loader = net.test_dataloader()
+        assert test_loader
+        print("here")
+        trainer.test(model)
+
+
+    else:
+        if args.train:
+            net = Net(config, model)
+
+            # initialise Lightning's trainer.
+            trainer = pytorch_lightning.Trainer(
+                gpus=[0],
+                min_epochs=1,
+                max_epochs=4,
+                logger=tb_logger,
+                enable_checkpointing=True,
+                num_sanity_val_steps=1,
+                log_every_n_steps=1,
+                strategy='ddp'
+            )
+
+            # train
+            trainer.fit(net)
+            print(f"train completed, best_metric: {net.best_val_loss:.4f} " f"at epoch {net.best_val_epoch}")
+
+            # test
+            trainer.test(net)
+            # save
+            writefile = open("./logs/default/pred.pkl", "wb")
+            pickle.dump(net.predictions, writefile)
+            writefile.close()
+
+
+
+
+
+        else:
+            net = Net(config, model)
+            print("Testing Model with random vals")
+            trainer = pytorch_lightning.Trainer(
+                gpus=[0],
+                min_epochs=1,
+                max_epochs=1,
+                logger=tb_logger,
+                enable_checkpointing=True,
+                num_sanity_val_steps=1,
+                log_every_n_steps=1,
+                strategy='ddp'
+            )
+
+            net.prepare_data()
+            print(f"train completed, best_metric: {net.best_val_loss:.4f} " f"at epoch {net.best_val_epoch}")
+            
+            trainer.test(net)
+            writefile = open( "./logs/default/pred.pkl", "wb" )
+            pickle.dump( net.predictions, writefile)
+            writefile.close()
 
 
 
