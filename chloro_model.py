@@ -195,7 +195,6 @@ if __name__ == "__main__":
       #                 )
 
     net = Net(config, model)
-    net.prepare_data()
 
 
 
@@ -206,7 +205,6 @@ if __name__ == "__main__":
 
       pathToPretrainedCheckpoint = "/content/ForecastingAlgae/logs/default/version_0/checkpoints/CustomUNet_Exp01_epoch=3-step=319.ckpt"
       model = LightningModule.load_from_checkpoint(pathToPretrainedCheckpoint)
-      #model = LightningModule.load_from_checkpoint(pathToPretrainedCheckpoint)
       print()
       
       checkpoint = torch.load(pathToPretrainedCheckpoint)
@@ -219,16 +217,13 @@ if __name__ == "__main__":
       model.load_state_dict(new_state_dict)
       print("loaded checkpoint")
       test_loader = net.test_dataloader()
-      #model = LightningModule.load_from_checkpoint(pathToPretrainedModel)
       assert test_loader
       print("here")
       trainer.test(model)
-      #predictions = trainer.predict(model, dataloaders=test_loader)
-      #print(predictions.shape)
 
 
     else:
-
+      net.prepare_data()
       print(f"train completed, best_metric: {net.best_val_loss:.4f} " f"at epoch {net.best_val_epoch}")
       
       trainer.test(net)
