@@ -34,8 +34,8 @@ from models import UNet, CustomViTAutoEnc, CustomUNet, CustomAttentionUNet
 # from monai.networks.nets import UNet, ViTAutoEnc, AttentionNet
 
 class Net(LightningModule):
-    def __init__(self, config, model):
-        super().__init__()
+    def _init_(self, config, model):
+        super()._init_()
 
         self.config = config
 
@@ -160,42 +160,45 @@ class Net(LightningModule):
         self.log("test_loss", mean_test_loss, prog_bar=True, sync_dist=True)
         return {"log": tensorboard_logs}
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     
-    # initialise Lightning's trainer.
-    tb_logger = pytorch_lightning.loggers.CSVLogger(save_dir="./logs")
-
     config = {
-          "model": "VIT_AE",
-          "batch_size": 64,
+          "model": "UNET",
+          "batch_size": 32,
           "time_in": 10,
           "time_out": 20,
           "lr": 1e-4
       }
+    
+    model_name = config['model']
+    # initialise Lightning's trainer.
+    tb_logger = pytorch_lightning.loggers.CSVLogger(save_dir=f"./logs/{model_name}/")
 
-    model = CustomViTAutoEnc(
-                            in_channels=10,
-                            patch_size=(16,16),
-                            img_size=(128,128),
-                            out_channels = 20,
-                            dropout_rate = 0.4
-                            )
+#     model = CustomViTAutoEnc(
+#                             in_channels=10,
+#                             patch_size=(16,16),
+#                             img_size=(128,128),
+#                             out_channels = 20,
+#                             dropout_rate = 0.4
+#                             )
 
-    # model = CustomUNet(
-    #                     spatial_dims=2,
-    #                     in_channels=10,
-    #                     out_channels=20,
-    #                     channels=(16,32,64,128,256),
-    #                     strides=(2,2,2,2,2)
-    #                   )
+    model = CustomUNet(
+                        spatial_dims=2,
+                        in_channels=10,
+                        out_channels=20,
+                        channels=(16,32,64,128,256),
+                        strides=(2,2,2,2,2),
+                        dropout = 0.4
+                      )
 
-      # model = CustomAttentionUNet(
-      #                     spatial_dims=2,
-      #                     in_channels=10,
-      #                     out_channels=20,
-      #                     channels=(16,32,64,128,256),
-    #                       strides=(2,2,2,2,2)
-      #                 )
+#     model = CustomAttentionUNet(
+#                       spatial_dims=2,
+#                       in_channels=10,
+#                       out_channels=20,
+#                       channels=(16,32,64,128,256),
+#                       strides=(2,2,2,2,2),
+#                       dropout = 0.4
+#     )
         
     net = Net(config, model)
     
