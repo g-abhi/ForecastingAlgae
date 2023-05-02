@@ -256,7 +256,7 @@ if __name__ == "__main__":
             # writefile = open("./logs/default/pred.pkl", "wb")
             # pickle.dump(net.predictions, writefile)
             # writefile.close()
-            np.save('./logs/default/preds.npy', np.array(net.predictions.cpu(), dtype=object), allow_pickle=True)
+            # np.save('./logs/default/preds.npy', np.array(net.predictions.cpu(), dtype=object), allow_pickle=True)
 
 
 
@@ -283,7 +283,7 @@ if __name__ == "__main__":
             # writefile = open( "./logs/default/pred.pkl", "wb" )
             # pickle.dump( net.predictions, writefile)
             # writefile.close()
-            np.save('./logs/default/preds.npy', np.array(net.predictions.cpu(), dtype=object), allow_pickle=True)
+            # np.save('./logs/default/preds.npy', np.array(net.predictions.cpu(), dtype=object), allow_pickle=True)
 
 
 
